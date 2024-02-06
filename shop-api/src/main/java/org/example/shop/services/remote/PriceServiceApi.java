@@ -1,9 +1,8 @@
-package org.example.shop.services;
+package org.example.shop.services.remote;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.example.shop.store.entities.GoodEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -19,20 +18,8 @@ public class PriceServiceApi {
 
     private static final Map<Long, Long> GOOD_ID_TO_PRICE_IN_RUBLES = new ConcurrentHashMap<>();
 
-    public Long getPriceInRubles(GoodEntity good) {
+    public Map<Long, Long> getGoodIdToPriceInRublesByGoodIds(List<Long> goodIds) {
 
-        // Обращение к отдельному микросервису
-        try {
-            Thread.sleep(10);
-        } catch (InterruptedException e) {
-        }
-
-        return remoteCalculatePriceInRubles(good.getId());
-    }
-
-    public Map<Long, Long> getGoodIdToPriceInRublesMap(List<GoodEntity> goods) {
-
-        // Обращение к отдельному микросервису
         try {
             Thread.sleep(20);
         } catch (InterruptedException e) {
@@ -40,14 +27,26 @@ public class PriceServiceApi {
 
         Map<Long, Long> goodIdToPriceInRubles = new HashMap<>();
 
-        for (GoodEntity good : goods) {
-            goodIdToPriceInRubles.put(good.getId(), remoteCalculatePriceInRubles(good.getId()));
+        for (Long goodId : goodIds) {
+            goodIdToPriceInRubles.put(goodId, calculatePriceInRubles(goodId));
         }
 
         return goodIdToPriceInRubles;
+
     }
 
-    private Long remoteCalculatePriceInRubles(Long goodId) {
+    public Long getPriceInRublesByGoodId(Long goodId) {
+
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+        }
+
+        return calculatePriceInRubles(goodId);
+    }
+
+    private Long calculatePriceInRubles(Long goodId) {
+
         return GOOD_ID_TO_PRICE_IN_RUBLES.computeIfAbsent(
                 goodId,
                 it -> new Random().nextLong(10, 40)

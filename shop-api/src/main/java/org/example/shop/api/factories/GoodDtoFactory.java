@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.example.shop.api.dto.GoodDto;
-import org.example.shop.services.PriceServiceApi;
+import org.example.shop.services.PriceService;
 import org.example.shop.store.entities.GoodEntity;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +13,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class GoodDtoFactory {
 
-    PriceServiceApi priceServiceApi;
+    PriceService priceService;
 
     public GoodDto makeDto(GoodEntity entity) {
         return GoodDto.builder()
                 .id(entity.getId())
                 .name(entity.getName())
-                .priceInRubles(priceServiceApi.getPriceInRubles(entity))
+                .priceInRubles(priceService.getPriceInRubles(entity))
                 .build();
     }
 }
