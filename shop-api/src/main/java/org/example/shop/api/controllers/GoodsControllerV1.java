@@ -16,26 +16,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @RestController
-public class GoodsController {
+public class GoodsControllerV1 {
 
     GoodRepository goodRepository;
     GoodDtoFactory goodDtoFactory;
 
-    public static final String GET_ALL_GOODS = "/api/goods";
-    public static final String GET_GOOD = "/api/goods{good_id}";
+    public static final String GET_ALL_GOODS = "/api/goods/v1";
 
     @GetMapping(GET_ALL_GOODS)
     public List<GoodDto> getAllGoods() {
-
-        return goodRepository.findAll().stream()
-                .map(goodDtoFactory::makeDto).toList();
+        return goodDtoFactory.makeDtoToList(goodRepository.findAll());
     }
 
-    @GetMapping(GET_GOOD)
-    public GoodDto getGood(@PathVariable("good_id") Long good_id) {
-
-        return goodRepository.findById(good_id).map(goodDtoFactory::makeDto).orElseThrow(() -> {
-            throw new NotFoundException("Good not found");
-        });
-    }
 }
