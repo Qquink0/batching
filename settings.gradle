@@ -1,3 +1,4 @@
 rootProject.name = 'batching'
 
 include 'shop-api'
+include 'shop-with-hystrix-api'
