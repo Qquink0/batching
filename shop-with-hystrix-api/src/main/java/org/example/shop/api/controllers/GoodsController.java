@@ -27,8 +27,7 @@ public class GoodsController {
     @GetMapping(GET_ALL_GOODS)
     public List<GoodDto> getAllGoods() {
 
-        return goodRepository.findAll().stream()
-                .map(goodDtoFactory::makeDto).toList();
+        return goodDtoFactory.makeDtoToList(goodRepository.findAll());
     }
 
     @GetMapping(GET_GOOD)
