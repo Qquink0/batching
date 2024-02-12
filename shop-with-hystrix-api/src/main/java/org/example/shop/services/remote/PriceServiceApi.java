@@ -18,7 +18,7 @@ public class PriceServiceApi {
 
     private static final Map<Long, Long> GOOD_ID_TO_PRICE_IN_RUBLES = new ConcurrentHashMap<>();
 
-    public Map<Long, Long> getGoodIdToPriceInRublesByGoodIds(List<Long> goodIds) {
+    public List<Long> getGoodIdToPriceInRublesByGoodIds(List<Long> goodIds) {
 
         try {
             Thread.sleep(20);
@@ -31,7 +31,10 @@ public class PriceServiceApi {
             goodIdToPriceInRubles.put(goodId, calculatePriceInRubles(goodId));
         }
 
-        return goodIdToPriceInRubles;
+        return goodIds
+                .stream()
+                .map(goodIdToPriceInRubles::get)
+                .toList();
 
     }
 

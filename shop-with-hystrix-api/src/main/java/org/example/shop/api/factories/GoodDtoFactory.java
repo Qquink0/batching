@@ -8,8 +8,10 @@ import org.example.shop.services.PriceService;
 import org.example.shop.store.entities.GoodEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -18,19 +20,25 @@ public class GoodDtoFactory {
 
     PriceService priceService;
 
-    public GoodDto makeDto(GoodEntity entity) {
+    public GoodDto makeDto(GoodEntity entity) throws ExecutionException, InterruptedException {
 
-        return makeDto(entity, priceService.getPriceInRubles(entity));
-
+        return makeDto(
+                entity,
+                priceService.getPriceInRubles(entity).get()
+        );
     }
 
-    public List<GoodDto> makeDtoToList(List<GoodEntity> entities) {
+    public List<GoodDto> makeDtoToList(List<GoodEntity> entities) throws ExecutionException, InterruptedException {
 
-        Map<Long, Long> goodIdToPriceInRublesMap = priceService.getGoodIdToPriceInRublesMap(entities);
+        List<GoodDto> goodDtoList = new ArrayList<>();
 
-        return entities.stream()
-                .map(entity -> makeDto(entity, goodIdToPriceInRublesMap.get(entity.getId())))
-                .toList();
+        for (GoodEntity entity : entities) {
+            goodDtoList.add(
+                    makeDto(entity, priceService.getPriceInRubles(entity).get())
+            );
+        }
+
+        return goodDtoList;
     }
 
     private GoodDto makeDto(GoodEntity entity, Long priceInRubles) {

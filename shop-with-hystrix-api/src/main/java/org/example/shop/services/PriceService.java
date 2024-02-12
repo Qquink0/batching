@@ -1,5 +1,7 @@
 package org.example.shop.services;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCollapser;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
@@ -17,12 +20,20 @@ public class PriceService {
 
     PriceServiceApi priceServiceApi;
 
-    public Long getPriceInRubles(GoodEntity good) {
-
-        return priceServiceApi.getPriceInRublesByGoodId(good.getId());
+    @HystrixCollapser(
+            collapserKey = "getPriceInRubles",
+            scope = com.netflix.hystrix.HystrixCollapser.Scope.GLOBAL,
+            batchMethod = "getGoodIdToPriceInRublesMap"
+    )
+    public Future<Long> getPriceInRubles(GoodEntity good) {
+        return null;
     }
 
-    public Map<Long, Long> getGoodIdToPriceInRublesMap(List<GoodEntity> goods) {
+    @HystrixCommand(
+            groupKey = "goods:price:get-all",
+            commandKey = "getGoodIdToPriceInRublesMap"
+    )
+    public List<Long> getGoodIdToPriceInRublesMap(List<GoodEntity> goods) {
 
         return priceServiceApi.getGoodIdToPriceInRublesByGoodIds(
                 goods.stream()

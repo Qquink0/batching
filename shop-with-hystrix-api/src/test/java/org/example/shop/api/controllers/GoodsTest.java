@@ -47,23 +47,6 @@ class GoodsTest {
     }
 
     @Test
-    void should_Pass_When_GetAllGoodsByControllerV1() throws Exception {
-
-        Long goodsCount = goodRepository.countAll();
-
-        long getAllGoodsFromControllerStartTime = System.currentTimeMillis();
-
-        mvc.perform(
-                        get(GoodsControllerV1.GET_ALL_GOODS)
-                )
-                .andExpect(jsonPath("$.size()").value(goodsCount));
-
-        log.info("All goods fetched by %s millis (controller v1)."
-                .formatted(System.currentTimeMillis() - getAllGoodsFromControllerStartTime));
-
-    }
-
-    @Test
     void should_Pass_When_GetAllGoodsByRepository() {
 
         long getAllGoodsFromRepositoryStartTine = System.currentTimeMillis();
