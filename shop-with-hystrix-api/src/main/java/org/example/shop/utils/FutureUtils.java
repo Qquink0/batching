@@ -1,10 +1,13 @@
 package org.example.shop.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 
+@UtilityClass
 public class FutureUtils {
 
     public <T> CompletableFuture<T> makeCompletableFuture(Future<T> future) {
