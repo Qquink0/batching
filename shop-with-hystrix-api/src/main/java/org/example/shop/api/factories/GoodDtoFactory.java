@@ -31,7 +31,7 @@ public class GoodDtoFactory {
         );
     }
 
-    public List<GoodDto> makeDtoToList(List<GoodEntity> entities) throws ExecutionException, InterruptedException {
+    public List<GoodDto> makeDtoToList(List<GoodEntity> entities) {
 
         List<GoodDto> goodDtoList = new ArrayList<>();
 
@@ -44,10 +44,15 @@ public class GoodDtoFactory {
 
             futures.add(future);
 
-            goodDtoList.add(
-                    makeDto(entity, future.get())
-            );
+            GoodDto goodDto = makeBaseDto(entity);
+
+            goodDtoList.add(goodDto);
+
+            // TODO: Если для товара не была возвращена цена - нужно что-то с этим сделать
+            future.whenComplete((priceInRubles, e) -> goodDto.setPriceInRubles(priceInRubles));
         }
+
+        futures.forEach(CompletableFuture::join);
 
         return goodDtoList;
     }
@@ -57,6 +62,13 @@ public class GoodDtoFactory {
                 .id(entity.getId())
                 .name(entity.getName())
                 .priceInRubles(priceInRubles)
+                .build();
+    }
+
+    private GoodDto makeBaseDto(GoodEntity entity) {
+        return GoodDto.builder()
+                .id(entity.getId())
+                .name(entity.getName())
                 .build();
     }
 }

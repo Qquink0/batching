@@ -28,11 +28,7 @@ public class GoodsController {
 
     @GetMapping(GET_ALL_GOODS)
     public List<GoodDto> getAllGoods() {
-        try {
-            return goodDtoFactory.makeDtoToList(goodRepository.findAll());
-        } catch (ExecutionException | InterruptedException e) {
-            throw new InternalServerErrorException(e.getCause());
-        }
+        return goodDtoFactory.makeDtoToList(goodRepository.findAll());
     }
 
     @GetMapping(GET_GOOD)
