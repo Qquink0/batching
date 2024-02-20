@@ -25,7 +25,10 @@ public class PriceService {
     @HystrixCollapser(
             collapserKey = "getPriceInRubles",
             scope = com.netflix.hystrix.HystrixCollapser.Scope.GLOBAL,
-            batchMethod = "getPriceInRublesByGoods"
+            batchMethod = "getPriceInRublesByGoods",
+            collapserProperties = {
+                    @HystrixProperty(name = "maxRequestsInBatch", value = "25")
+            }
     )
     public Future<Long> getPriceInRubles(GoodEntity good) {
         return null;

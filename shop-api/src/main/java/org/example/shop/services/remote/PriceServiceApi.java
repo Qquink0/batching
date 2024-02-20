@@ -3,6 +3,9 @@ package org.example.shop.services.remote;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.experimental.NonFinal;
+import org.example.shop.api.controllers.exceptions.BadRequestException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -18,7 +21,14 @@ public class PriceServiceApi {
 
     private static final Map<Long, Long> GOOD_ID_TO_PRICE_IN_RUBLES = new ConcurrentHashMap<>();
 
+    @Value("${goods.price.fetch-size-limit:25}")
+    @NonFinal Integer fetchSizeLimit;
+
     public Map<Long, Long> getGoodIdToPriceInRublesByGoodIds(List<Long> goodIds) {
+
+        if (goodIds.size() > fetchSizeLimit) {
+            throw new BadRequestException("Good ids too large for request processing");
+        }
 
         try {
             Thread.sleep(20);
