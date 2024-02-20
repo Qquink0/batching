@@ -34,7 +34,12 @@ public class PriceService {
         return null;
     }
 
-    @HystrixCommand(commandKey = "getGoodIdToPriceInRublesMap")
+    @HystrixCommand(
+            commandKey = "getGoodIdToPriceInRublesMap",
+            threadPoolProperties = {
+                    @HystrixProperty(name = "allowMaximumSizeToDivergeFromCoreSize", value = "true")
+            }
+    )
     public List<Long> getPriceInRublesByGoods(List<GoodEntity> goods) {
 
         log.info("getPriceInRublesByGoods handled %s goods.".formatted(goods.size()));
