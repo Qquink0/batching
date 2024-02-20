@@ -24,7 +24,7 @@ public class GoodDataInitializer {
 
         long currentTimeMillis = System.currentTimeMillis();
 
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 2000; i++) {
 
             goodRepository.add(
                     GoodEntity.builder()

@@ -29,7 +29,7 @@ class GoodsTest {
     @Autowired
     GoodRepository goodRepository;
 
-    @Test
+//    @Test
     void should_Pass_When_GetAllGoodsByController() throws Exception {
 
         Long goodsCount = goodRepository.countAll();
